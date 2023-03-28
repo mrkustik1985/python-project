@@ -54,13 +54,13 @@ class TextEditor:
         # create menu to work with edit (to do function for hot keys)
         self.edit_menu = Menu(self.main_menu, font=("times new roman",12,"bold"), activebackground="skyblue", tearoff=0)
         # adding cut text command
-        self.edit_menu.add_command(label="Cut",accelerator="Ctrl+X", command=self.cut)
+        self.edit_menu.add_command(label="CutWord",accelerator="Ctrl+X", command=self.delete_currently_word)
         # adding copy text command
         self.edit_menu.add_command(label="Copy",accelerator="Ctrl+C", command=self.copy)
         # adding paste text command
         self.edit_menu.add_command(label="Paste",accelerator="Ctrl+V", command=self.paste)
         self.edit_menu.add_command(label="Cancel",accelerator="Ctrl+Z", command=self.cancel_action)
-        self.edit_menu.add_command(label="Endstr",accelerator="Ctrl+P", command=self.move_to_end_string)
+        self.edit_menu.add_command(label="DltCrntStr",accelerator="Ctrl+P", command=self.delete_currently_string)
         # adding seprator
         self.edit_menu.add_separator()
         # adding undo text Command
@@ -140,10 +140,17 @@ class TextEditor:
             messagebox.showerror("ERROR", e)
 
     def first_save_file(self, *args):
-        self.filename = fd.asksaveasfilename(filetypes = (("All Files","*.*"),("Text Files","*.txt"),("Python Files","*.py")))
-        self.is_open_file()
-        self.last_action.set("file overwrite")
-
+        try:
+            f = fd.asksaveasfilename(filetypes = (("All Files","*.*"),("Text Files","*.txt"),("Python Files","*.py")))
+            if f:
+                self.filename = f
+                f = open(self.filename, "w")
+                f.write(self.text.get(1.0,END))
+                f.close()
+            self.is_open_file()
+            self.last_action.set("saved successfully")
+        except Exception as e:
+            messagebox.showerror("ERROR", e)
     # to do it than file already saved didn't do over work
     def exit(self, *args):
         op = messagebox.askyesno("WARNING","Your unsaved data may be lost!! Exit?")
@@ -151,9 +158,6 @@ class TextEditor:
             self.root.destroy()
         else:
             return
-        
-    def cut(self, *args):
-        self.text.event_generate("<<Cut>>")
 
     def copy(self, *args):
         self.text.event_generate("<<Copy>>")
@@ -171,10 +175,51 @@ class TextEditor:
     def cancel_action(self, *args):
         self.text.edit_undo()
 
-    #to do it
-    def move_to_end_string(self, *args):
-        print(self.text.index("insert"))
+    def delete_currently_string(self, *args):
+        id_now = self.text.index("insert")
+        txt = self.text.get(1.0,END)
+        self.text.delete(1.0,END)
+        txt = txt.split("\n")
+        cnt = 0
+        id_now = id_now.split(".")
+        id_now = int(id_now[0])
+        id_last_not_empty = 0
+        cl = 0
+        for i in txt:
+            cl += 1
+            if i != '':
+                id_last_not_empty = cl
+        for l in txt:
+            cnt += 1
+            if cnt != id_now and cnt <= id_last_not_empty:
+                self.text.insert(END,l + '\n')
     
+    def delete_currently_word(self, *args):
+        id_now = self.text.index("insert").split(".")
+        txt = self.text.get(1.0,END)
+        self.text.delete(1.0,END)
+        txt = txt.split("\n")
+        txt = txt[:-1]
+        row = 0
+        id_in_row = int(id_now[1])
+        id_row = int(id_now[0])
+        id_last_not_empty = 0
+        cl = 0
+        for line in txt:
+            cl += 1
+            if line != '':
+                id_last_not_empty = cl
+        for line in txt:
+            row += 1
+            if row == id_row:
+                y = line[:id_in_row].rfind(' ')
+                x = line[id_in_row:].find(' ')
+                if x == -1:
+                    x = len(line)
+                self.text.insert(END, line[:y + 1] + line[id_in_row + x:] + '\n')
+            elif row <= id_last_not_empty:
+                self.text.insert(END, line + '\n')
+
     def find(self, *args):
         self.text.tag_remove('found', '1.0', END)
         is_find_pressed = self.edit_find.get()
@@ -218,12 +263,12 @@ class TextEditor:
         self.text.bind("<Control-o>",self.open_file)
         self.text.bind("<Control-s>",self.save_file)
         self.text.bind("<Control-a>",self.first_save_file)
-        self.text.bind("<Control-x>",self.cut) # to do it
+        self.text.bind("<Control-x>",self.delete_currently_word)
         self.text.bind("<Control-c>",self.copy)
         self.text.bind("<Control-v>",self.paste)
         self.text.bind("<Control-u>",self.undo)
         self.text.bind("<Control-z>",self.cancel_action)
-        self.text.bind("<Control-p>",self.move_to_end_string) # to do it
+        self.text.bind("<Control-p>",self.delete_currently_string)
 
 root = Tk()
 TextEditor(root)
