@@ -69,7 +69,10 @@ class TextEditor:
         # creating help menu
 
         self.help_menu = Menu(self.main_menu, font=("times new roman",12,"bold"), activebackground="skyblue", tearoff=0)
-        self.help_menu.add_command(label="About", command=self.infoabout)
+        self.help_menu.add_command(label="About Text Editor", command=self.info_about_text_editor)
+        self.help_menu.add_command(label="About Button", command=self.info_about_button)
+        self.help_menu.add_command(label="About HotKeys", command=self.info_about_hot_keys)
+        self.help_menu.add_command(label="About Movement fot text", command=self.info_about_text_move)
 
         self.main_menu.add_cascade(label="File",menu=self.file_menu)
         self.main_menu.add_cascade(label="Edit",menu=self.edit_menu)
@@ -92,9 +95,17 @@ class TextEditor:
         self.text.pack(fill=BOTH,expand=1)
         self.add_hot_key()
     # to do it
-    def infoabout(self, *args):
-        pass
+    def info_about_text_editor(self, *args):
+        messagebox.showinfo("About text editor", " Это текстовый редактор!\n Тут вы можете писать текст, открывать и редактировать существующие файлы, и изменять текущие.\n Функционал горячих клавиш описан в другом окне:) Тут есть поддержка выделения текста совмещенная с перемещением по тексту\n")
 
+    def info_about_button(self, *args):
+        messagebox.showinfo("About Button with editor and files", " Горячие клавиши и комбинацию к ним также можно найти в других окнах меню.\n cntrl+n - создать новый файл\n cntrl+o - открыть файл\n cntrl+s - сохранить, если не существует файла, то создать\n cntrl+a - сохранить файл как\n cntrl+e - выйти из редактора, перед выходом вас спросят сохранили ли вы файл\n")
+        
+    def info_about_hot_keys(self, *args):
+        messagebox.showinfo("About Hot Keys", " cntrl+x - вырезать слово на котором находится курсор(также работает перед словом и сразу после него)\n cntrl+c - копировать выделенное\n cntrl+v - вставить выделенное\n cntrl+z - отменить последнее действие(редактрование слово, вставку и т.д)\n cntrl+p - удалить строку на которой находится курсор\n cntrl+u - удалить весь текст целиком")
+
+    def info_about_text_move(self, *args):
+        messagebox.showinfo("About movement fot text", " cntrl + -> курсор перемщается на 1 слово вправо\n cntrl + <- курсор перемщается на 1 слово влево\n fn + -> перемещается в конец строки\n fn + <- перемещается в начало строки\n")
     def is_open_file(self):
         if self.filename!= None:
             self.title.set(self.filename)
