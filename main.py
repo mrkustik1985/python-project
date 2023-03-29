@@ -60,7 +60,7 @@ class TextEditor:
         # adding paste text command
         self.edit_menu.add_command(label="Paste",accelerator="Ctrl+V", command=self.paste)
         self.edit_menu.add_command(label="Cancel",accelerator="Ctrl+Z", command=self.cancel_action)
-        self.edit_menu.add_command(label="DltCrntStr",accelerator="Ctrl+P", command=self.delete_currently_string)
+        self.edit_menu.add_command(label="DltCrntStr",accelerator="Ctrl+B", command=self.delete_currently_string)
         # adding seprator
         self.edit_menu.add_separator()
         # adding undo text Command
@@ -94,7 +94,7 @@ class TextEditor:
         self.scrollbar.pack(side=RIGHT,fill=Y)
         self.text.pack(fill=BOTH,expand=1)
         self.add_hot_key()
-    # to do it
+
     def info_about_text_editor(self, *args):
         messagebox.showinfo("About text editor", " Это текстовый редактор!\n Тут вы можете писать текст, открывать и редактировать существующие файлы, и изменять текущие.\n Функционал горячих клавиш описан в другом окне:) Тут есть поддержка выделения текста совмещенная с перемещением по тексту\n")
 
@@ -113,6 +113,10 @@ class TextEditor:
             self.title.set("Untitled")
     
     def new_file(self, *args):
+        if self.filename != None:
+            self.save_file()
+        else:
+            self.first_save_file()
         self.text.delete(1.0,END)
         self.filename = None
         self.is_open_file()
@@ -162,7 +166,7 @@ class TextEditor:
             self.last_action.set("saved successfully")
         except Exception as e:
             messagebox.showerror("ERROR", e)
-    # to do it than file already saved didn't do over work
+
     def exit(self, *args):
         op = messagebox.askyesno("WARNING","Your unsaved data may be lost!! Exit?")
         if op>0:
@@ -279,7 +283,7 @@ class TextEditor:
         self.text.bind("<Control-v>",self.paste)
         self.text.bind("<Control-u>",self.undo)
         self.text.bind("<Control-z>",self.cancel_action)
-        self.text.bind("<Control-p>",self.delete_currently_string)
+        self.text.bind("<Control-b>",self.delete_currently_string)
 
 root = Tk()
 TextEditor(root)
