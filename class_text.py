@@ -1,9 +1,10 @@
-from tkinter import *
+import tkinter as tk
 from tkinter import messagebox
 from tkinter import filedialog as fd
 import idlelib.colorizer as ic
 import idlelib.percolator as ip
 import re
+
 start_size_screen = "1200x700"
 
 class TextEditor:
@@ -33,7 +34,7 @@ class TextEditor:
 
     def info_about_button(self, *args):
         messagebox.showinfo(
-            "About Button with editor and files",
+            "About tk.Button with editor and files",
             " Горячие клавиши и комбинацию к ним также можно найти в других окнах меню.\n cntrl+n - создать новый файл\n cntrl+o - открыть файл\n cntrl+s - сохранить, если не существует файла, то создать\n cntrl+a - сохранить файл как\n cntrl+e - выйти из редактора, перед выходом вас спросят сохранили ли вы файл\n",
         )
 
@@ -50,7 +51,7 @@ class TextEditor:
         )
 
     def add_TEXT(self):
-        self.text = Text(
+        self.text = tk.Text(
             self.root,
             font=("times new roman", 15, "bold"),
             bd=2,
@@ -58,14 +59,14 @@ class TextEditor:
             fg="lime",
             padx=10,
             pady=10,
-            wrap=WORD,
+            wrap=tk.WORD,
             insertbackground="white",
             undo=True,
         )
-        self.scrollbar = Scrollbar(orient="vertical", command=self.text.yview)
+        self.scrollbar = tk.Scrollbar(orient="vertical", command=self.text.yview)
         self.text["yscrollcommand"] = self.scrollbar.set
-        self.scrollbar.pack(side=RIGHT, fill=Y)
-        self.text.pack(fill=BOTH, expand=1)
+        self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.text.pack(fill=tk.BOTH, expand=1)
 
     def make_highlighting(self):
       cdg = ic.ColorDelegator()
@@ -79,53 +80,53 @@ class TextEditor:
       ip.Percolator(self.text).insertfilter(cdg)
 
     def create_title_file_name(self):
-        self.title = StringVar()
-        self.title_bar = Label(
+        self.title = tk.StringVar()
+        self.title_bar = tk.Label(
             self.root,
             textvariable=self.title,
             font=("times new roman", 15, "bold"),
             bd=2,
-            relief=GROOVE,
+            relief=tk.GROOVE,
         )
-        self.title_bar.pack(side=TOP, fill=BOTH)
+        self.title_bar.pack(side=tk.TOP, fill=tk.BOTH)
         self.is_open_file()
 
     def create_last_action_title(self):
-        self.last_action = StringVar()
-        self.last_action_bar = Label(
+        self.last_action = tk.StringVar()
+        self.last_action_bar = tk.Label(
             self.root,
             textvariable=self.last_action,
             font=("times new roman", 15, "bold"),
             bd=4,
-            relief=GROOVE,
+            relief=tk.GROOVE,
         )
-        self.last_action_bar.pack(side=BOTTOM, fill=BOTH)
+        self.last_action_bar.pack(side=tk.BOTTOM, fill=tk.BOTH)
         self.last_action.set("welcome to text editor")
 
     def create_find_and_replace_frame(self):
-        self.frame = Frame(self.root)
+        self.frame = tk.Frame(self.root)
         self.create_button_find()
         self.create_button_replace()
-        self.frame.pack(side=TOP, fill=BOTH)
+        self.frame.pack(side=tk.TOP, fill=tk.BOTH)
 
     def create_button_find(self):
-        Label(self.frame, text="Find").pack(side=LEFT)
-        self.edit_find = Entry(self.frame)
-        self.edit_find.pack(side=LEFT, fill=BOTH, expand=1)
+        tk.Label(self.frame, text="Find").pack(side=tk.LEFT)
+        self.edit_find = tk.Entry(self.frame)
+        self.edit_find.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
         self.edit_find.focus_set()
-        self.find = Button(self.frame, text="Find", command=self.find)
-        self.find.pack(side=LEFT)
+        self.find = tk.Button(self.frame, text="Find", command=self.find)
+        self.find.pack(side=tk.LEFT)
 
     def create_button_replace(self):
-        Label(self.frame, text="Replace").pack(side=LEFT)
-        self.edit_replace = Entry(self.frame)
-        self.edit_replace.pack(side=LEFT, fill=BOTH, expand=1)
+        tk.Label(self.frame, text="Replace").pack(side=tk.LEFT)
+        self.edit_replace = tk.Entry(self.frame)
+        self.edit_replace.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
         self.edit_replace.focus_set()
-        self.replace = Button(self.frame, text="Replace", command=self.find_replace)
-        self.replace.pack(side=LEFT)
+        self.replace = tk.Button(self.frame, text="Replace", command=self.find_replace)
+        self.replace.pack(side=tk.LEFT)
 
     def create_file_menu(self):
-        self.file_menu = Menu(
+        self.file_menu = tk.Menu(
             self.main_menu,
             font=("times new roman", 12, "bold"),
             activebackground="skyblue",
@@ -149,7 +150,7 @@ class TextEditor:
         )
 
     def create_help_menu(self):
-        self.help_menu = Menu(
+        self.help_menu = tk.Menu(
             self.main_menu,
             font=("times new roman", 12, "bold"),
             activebackground="skyblue",
@@ -158,7 +159,7 @@ class TextEditor:
         self.help_menu.add_command(
             label="About Text Editor", command=self.info_about_text_editor
         )
-        self.help_menu.add_command(label="About Button", command=self.info_about_button)
+        self.help_menu.add_command(label="About tk.Button", command=self.info_about_button)
         self.help_menu.add_command(
             label="About HotKeys", command=self.info_about_hot_keys
         )
@@ -167,7 +168,7 @@ class TextEditor:
         )
 
     def create_edit_menu(self):
-        self.edit_menu = Menu(
+        self.edit_menu = tk.Menu(
             self.main_menu,
             font=("times new roman", 12, "bold"),
             activebackground="skyblue",
@@ -196,7 +197,7 @@ class TextEditor:
         )
 
     def create_main_menu(self):
-        self.main_menu = Menu(
+        self.main_menu = tk.Menu(
             self.root, font=("times new roman", 12, "bold"), activebackground="skyblue"
         )
         self.root.config(menu=self.main_menu)
@@ -221,22 +222,22 @@ class TextEditor:
             self.save_file()
         else:
             self.first_save_file()
-        self.text.delete(1.0, END)
+        self.text.delete(1.0, tk.END)
         self.filename = None
         self.is_open_file()
         self.last_action.set("new file created")
 
     def open_file(self, *args):
-        text_copy = self.text.get(1.0, END)
+        text_copy = self.text.get(1.0, tk.END)
         try:
             filetypes = (("All files", "*.*"), ("text files", "*.txt"))
             self.filename = fd.askopenfilename(
                 title="Open a file", initialdir="/", filetypes=filetypes
             )
             if self.filename != None:
-                self.text.delete(1.0, END)
+                self.text.delete(1.0, tk.END)
                 for l in open(self.filename):
-                    self.text.insert(END, l)
+                    self.text.insert(tk.END, l)
                 self.is_open_file()
                 self.last_action.set("file opened")
             else:
@@ -245,11 +246,11 @@ class TextEditor:
             pass
 
     def save_file(self, *args):
-        text_copy = self.text.get(1.0, END)
+        text_copy = self.text.get(1.0, tk.END)
         try:
             if self.filename != None:
                 with open(self.filename, "w") as f:
-                    f.write(self.text.get(1.0, END))
+                    f.write(self.text.get(1.0, tk.END))
                 self.last_action.set("file saved")
             else:
                 op = messagebox.askyesno("your file is unnamed", "save it?")
@@ -261,7 +262,7 @@ class TextEditor:
             messagebox.showerror("ERROR", e)
 
     def first_save_file(self, *args):
-        text_copy = self.text.get(1.0, END)
+        text_copy = self.text.get(1.0, tk.END)
         try:
             f = fd.asksaveasfilename(
                 filetypes=(
@@ -273,7 +274,7 @@ class TextEditor:
             if f:
                 self.filename = f
                 f = open(self.filename, "w")
-                f.write(self.text.get(1.0, END))
+                f.write(self.text.get(1.0, tk.END))
                 f.close()
             self.is_open_file()
             self.last_action.set("saved successfully")
@@ -297,7 +298,7 @@ class TextEditor:
 
     def undo(self, *args):
         try:
-            self.text.delete(1.0, END)
+            self.text.delete(1.0, tk.END)
             self.last_action.set("Undone Successfully")
         except Exception as e:
             messagebox.showerror("Exception", e)
@@ -308,15 +309,15 @@ class TextEditor:
 
     def find_need_ind_of_line_and_txt(self):
         id_now = self.text.index("insert").split(".")
-        txt = self.text.get(1.0, END)
-        self.text.delete(1.0, END)
+        txt = self.text.get(1.0, tk.END)
+        self.text.delete(1.0, tk.END)
         txt = txt.split("\n")
         cnt = 0
         id_last_not_empty = 0
         cl = 0
         for i in txt:
             cl += 1
-            if i != "":
+            if i != "" and i != "\n":
                 id_last_not_empty = cl
         return (id_last_not_empty, txt[::], id_now[::])
 
@@ -326,7 +327,7 @@ class TextEditor:
         for l in txt:
             cnt += 1
             if cnt != int(id_now[0]) and cnt <= id_last_not_empty:
-                self.text.insert(END, l + "\n")
+                self.text.insert(tk.END, l + "\n")
 
     def delete_currently_word(self, *args):
         id_last_not_empty, txt, id_now = self.find_need_ind_of_line_and_txt()
@@ -335,24 +336,29 @@ class TextEditor:
         row = 0
         for line in txt:
             row += 1
+            if row > id_last_not_empty:
+                break
             if row == id_row:
                 y = line[:id_in_row].rfind(" ")
                 x = line[id_in_row:].find(" ")
                 if x == -1:
                     x = len(line)
-                self.text.insert(END, line[: y + 1] + line[id_in_row + x :] + "\n")
+                need_move_str = '\n'
+                if row == id_last_not_empty:
+                    need_move_str = ''
+                self.text.insert(tk.END, line[: y + 1] + line[id_in_row + x :] + need_move_str)
             elif row < id_last_not_empty:
-                self.text.insert(END, line + "\n")
+                self.text.insert(tk.END, line + "\n")
             elif row == id_last_not_empty:
-                self.text.insert(END, line)
+                self.text.insert(tk.END, line)
 
     def find(self, *args):
-        self.text.tag_remove("found", "1.0", END)
+        self.text.tag_remove("found", "1.0", tk.END)
         is_find_pressed = self.edit_find.get()
         if is_find_pressed:
             idx = "1.0"
             while 1:
-                idx = self.text.search(is_find_pressed, idx, nocase=1, stopindex=END)
+                idx = self.text.search(is_find_pressed, idx, nocase=1, stopindex=tk.END)
                 if not idx:
                     break
                 # last index sum of current index and length of text
@@ -363,7 +369,7 @@ class TextEditor:
         self.edit_find.focus_set()
 
     def find_replace(self, *args):
-        self.text.tag_remove("found", "1.0", END)
+        self.text.tag_remove("found", "1.0", tk.END)
         is_pressed_find = self.edit_find.get()
         is_pressed_replace = self.edit_replace.get()
         if (
@@ -373,7 +379,7 @@ class TextEditor:
         ):
             idx = "1.0"
             while 1:
-                idx = self.text.search(is_pressed_find, idx, nocase=1, stopindex=END)
+                idx = self.text.search(is_pressed_find, idx, nocase=1, stopindex=tk.END)
                 if not idx:
                     break
                 lastidx = "% s+% dc" % (idx, len(is_pressed_find))
