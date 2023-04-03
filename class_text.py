@@ -66,12 +66,11 @@ class TextEditor:
         self.text["yscrollcommand"] = self.scrollbar.set
         self.scrollbar.pack(side=RIGHT, fill=Y)
         self.text.pack(fill=BOTH, expand=1)
-        self.make_highlighting()
 
     def make_highlighting(self):
       cdg = ic.ColorDelegator()
       cdg.idprog = re.compile(r'\s+(\w+)', re.S)
-      cdg.tagdefs['MYGROUP'] = {'foreground': '#7F7F7F'}
+      cdg.tagdefs['MYGROUP'] = {'foreground': '#7F7F7F'} # ok
       cdg.tagdefs['COMMENT'] = {'foreground': '#FF0000'} # ok
       cdg.tagdefs['KEYWORD'] = {'foreground': '#ff5c77'} # ok
       cdg.tagdefs['BUILTIN'] = {'foreground': '#7F7F00'} 
@@ -211,6 +210,9 @@ class TextEditor:
     def is_open_file(self):
         if self.filename != None:
             self.title.set(self.filename)
+            t = self.filename[-2] + self.filename[-1]
+            if t == "py":
+                self.make_highlighting()
         else:
             self.title.set("Untitled")
 
@@ -237,10 +239,10 @@ class TextEditor:
                     self.text.insert(END, l)
                 self.is_open_file()
                 self.last_action.set("file opened")
+            else:
+                self.last_action.set("file is not opened")
         except Exception as e:
-            self.text.insert("1.0", text_copy)
-            self.last_action.set("error of opened file")
-            messagebox.showerror("ERROR", e)
+            pass
 
     def save_file(self, *args):
         text_copy = self.text.get(1.0, END)
@@ -255,7 +257,7 @@ class TextEditor:
                     self.first_save_file()
         except Exception as e:
             self.text.insert("1.0", text_copy)
-            self.last_action.set("error of seved file")
+            self.last_action.set("error of saved file")
             messagebox.showerror("ERROR", e)
 
     def first_save_file(self, *args):
@@ -277,7 +279,7 @@ class TextEditor:
             self.last_action.set("saved successfully")
         except Exception as e:
             self.text.insert("1.0", text_copy)
-            self.last_action.set("error of opened file")
+            self.last_action.set("error of saved file")
             messagebox.showerror("ERROR", e)
 
     def exit(self, *args):
@@ -299,6 +301,7 @@ class TextEditor:
             self.last_action.set("Undone Successfully")
         except Exception as e:
             messagebox.showerror("Exception", e)
+
 
     def cancel_action(self, *args):
         self.text.edit_undo()
