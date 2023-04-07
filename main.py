@@ -1,8 +1,8 @@
-from tkinter import *
+import tkinter as tk
 from tkinter import messagebox
 from tkinter import filedialog as fd
 from class_text import TextEditor
 
-root = Tk()
+root = tk.Tk()
 TextEditor(root)
 root.mainloop()
